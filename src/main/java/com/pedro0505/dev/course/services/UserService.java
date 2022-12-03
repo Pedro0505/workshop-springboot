@@ -28,4 +28,8 @@ public class UserService {
 	public User insert(User user) {
 		return this.repository.save(user);
 	}
+	
+	public void delete(Long id) {
+		this.repository.deleteById(id);
+	}
 }
