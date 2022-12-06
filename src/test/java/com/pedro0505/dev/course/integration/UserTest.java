@@ -3,6 +3,7 @@ package com.pedro0505.dev.course.integration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,5 +76,18 @@ class UserTest {
 
 		this.mockMvc.perform(get(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(HttpStatus.NOT_FOUND.value()));
+	}
+	
+	@Test
+	@Order(5)
+	public void testUpdatUser() throws Exception {
+		User user = new User(null, "John Doe", "johndoe@gmail.com", "01929312112", null);
+		this.mockMvc
+				.perform(put(this.baseUrl.concat("/2")).contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(user)))
+				.andExpect(status().is(HttpStatus.OK.value()))
+				.andExpect(jsonPath("$.name").value("John Doe"))
+				.andExpect(jsonPath("$.email").value("johndoe@gmail.com"))
+				.andExpect(jsonPath("$.phone").value("01929312112"))
+				.andExpect(jsonPath("$.password").value("123456"));
 	}
 }
