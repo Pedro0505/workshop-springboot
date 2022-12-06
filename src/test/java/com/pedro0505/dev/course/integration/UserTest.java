@@ -44,28 +44,33 @@ class UserTest {
 	@Order(1)
 	public void testPostUser() throws Exception {
 		User user = new User(null, "Pedro", "pedro@gmail.com", "8198763242", "password");
-		this.mockMvc
-				.perform(post(this.baseUrl).contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(user)))
-				.andExpect(status().is(HttpStatus.CREATED.value())).andExpect(jsonPath("$.name").value("Pedro"))
+		this.mockMvc.perform(post(this.baseUrl).contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(user)))
+				.andExpect(status().is(HttpStatus.CREATED.value()))
+				.andExpect(jsonPath("$.name").value("Pedro"))
 				.andExpect(jsonPath("$.email").value("pedro@gmail.com"))
-				.andExpect(jsonPath("$.phone").value("8198763242")).andExpect(jsonPath("$.password").value("password"));
+				.andExpect(jsonPath("$.phone").value("8198763242"))
+				.andExpect(jsonPath("$.password").value("password"));
 	}
 
 	@Test
 	@Order(2)
 	public void testGeAlltUser() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(HttpStatus.OK.value())).andExpect(jsonPath("$[0].name").value("Maria Brown"))
-				.andExpect(jsonPath("$[1].name").value("Alex Green")).andExpect(jsonPath("$.length()").value(3));
+				.andExpect(status().is(HttpStatus.OK.value()))
+				.andExpect(jsonPath("$[0].name").value("Maria Brown"))
+				.andExpect(jsonPath("$[1].name").value("Alex Green"))
+				.andExpect(jsonPath("$.length()").value(3));
 	}
 
 	@Test
 	@Order(3)
 	public void testGetUserById() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(HttpStatus.OK.value())).andExpect(jsonPath("$.name").value("Maria Brown"))
+				.andExpect(status().is(HttpStatus.OK.value()))
+				.andExpect(jsonPath("$.name").value("Maria Brown"))
 				.andExpect(jsonPath("$.email").value("maria@gmail.com"))
-				.andExpect(jsonPath("$.phone").value("988888888")).andExpect(jsonPath("$.password").value("123456"));
+				.andExpect(jsonPath("$.phone").value("988888888"))
+				.andExpect(jsonPath("$.password").value("123456"));
 	}
 
 	@Test
@@ -77,7 +82,7 @@ class UserTest {
 		this.mockMvc.perform(get(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(HttpStatus.NOT_FOUND.value()));
 	}
-	
+
 	@Test
 	@Order(5)
 	public void testUpdatUser() throws Exception {
@@ -90,13 +95,22 @@ class UserTest {
 				.andExpect(jsonPath("$.phone").value("01929312112"))
 				.andExpect(jsonPath("$.password").value("123456"));
 	}
-	
+
 	@Test
 	@Order(6)
 	public void testFindUserByIdWhenUserIsNotFound() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl.concat("/14")).contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
-		.andExpect(jsonPath("$.message").value("Resource not found. Id: 14"))
-		.andExpect(jsonPath("$.error").value("Resource not found"));
+				.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+				.andExpect(jsonPath("$.message").value("Resource not found. Id: 14"))
+				.andExpect(jsonPath("$.error").value("Resource not found"));
+	}
+
+	@Test
+	@Order(6)
+	public void testDeleteUserWhenUserIsNotFound() throws Exception {
+		this.mockMvc.perform(delete(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+				.andExpect(jsonPath("$.message").value("Resource not found. Id: 14"))
+				.andExpect(jsonPath("$.error").value("Resource not found"));
 	}
 }
