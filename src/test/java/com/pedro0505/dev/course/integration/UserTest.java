@@ -92,7 +92,7 @@ class UserTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void testFindUserByIdWhenUserIsNotFound() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl.concat("/14")).contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
