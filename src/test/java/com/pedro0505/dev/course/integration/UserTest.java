@@ -44,4 +44,13 @@ class UserTest {
 		.andExpect(jsonPath("$.phone").value("8198763242"))
 		.andExpect(jsonPath("$.password").value("password"));
 	}
+	
+	@Test
+	public void testGeAlltUser() throws Exception {
+		this.mockMvc.perform(get(this.baseUrl).contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(HttpStatus.OK.value()))
+		.andExpect(jsonPath("$[0].name").value("Maria Brown"))
+		.andExpect(jsonPath("$[1].name").value("Alex Green"))
+		.andExpect(jsonPath("$.length()").value(2));
+	}
 }
