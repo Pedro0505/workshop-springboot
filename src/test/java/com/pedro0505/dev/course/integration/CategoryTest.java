@@ -33,6 +33,7 @@ class CategoryTest {
 	@Test
 	public void testGetAllCategories() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(HttpStatus.OK.value()))
 				.andExpect(jsonPath("$[0].name").value("Electronics"))
 				.andExpect(jsonPath("$[1].name").value("Books"));
 	}

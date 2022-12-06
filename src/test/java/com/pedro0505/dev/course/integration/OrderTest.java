@@ -12,11 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ProductTest {
+class OrderTest {
 	@LocalServerPort
 	private int port;
 
@@ -27,29 +30,28 @@ class ProductTest {
 
 	@BeforeEach
 	public void setUp() {
-		baseUrl = baseUrl.concat(":").concat(port + "").concat("/products");
+		baseUrl = baseUrl.concat(":").concat(port + "").concat("/orders");
 	}
 
 	@Test
-	public void testGetAllProducts() throws Exception {
+	public void testGetAllOrders() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(HttpStatus.OK.value()))
-				.andExpect(jsonPath("$[0].name").value("The Lord of the Rings"))
-				.andExpect(jsonPath("$[0].price").value(90.5))
-				.andExpect(jsonPath("$[0].categories[0].name").value("Books"))
-				.andExpect(jsonPath("$[1].name").value("Smart TV"))
-				.andExpect(jsonPath("$[1].price").value(2190.0))
-				.andExpect(jsonPath("$[1].categories[0].name").value("Electronics"))
-				.andExpect(jsonPath("$[1].categories[1].name").value("Computers"));
+				.andExpect(jsonPath("$[0].client").exists())
+				.andExpect(jsonPath("$[0].item").exists())
+				.andExpect(jsonPath("$[0].item[0].product").exists())
+				.andExpect(jsonPath("$[0].total").value(1431.0))
+				.andExpect(jsonPath("$[0].client.name").value("Maria Brown"));
 	}
 
 	@Test
-	public void testGetProductById() throws Exception {
-		this.mockMvc.perform(get(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
+	public void testGetOrderById() throws Exception {
+		this.mockMvc.perform(get(this.baseUrl.concat("/2")).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(HttpStatus.OK.value()))
-				.andExpect(jsonPath("$.name").value("The Lord of the Rings"))
-				.andExpect(jsonPath("$.price").value(90.5))
-				.andExpect(jsonPath("$.description").value("Lorem ipsum dolor sit amet, consectetur."))
-				.andExpect(jsonPath("$.categories[0].name").value("Books"));
+				.andExpect(jsonPath("$.client").exists())
+				.andExpect(jsonPath("$.item").exists())
+				.andExpect(jsonPath("$.item[0].product").exists())
+				.andExpect(jsonPath("$.total").value(2500.0))
+				.andExpect(jsonPath("$.client.name").value("Alex Green"));
 	}
 }
