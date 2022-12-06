@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,11 +27,11 @@ public class User implements Serializable {
 	private String email;
 	private String phone;
 	private String password;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Order> orders = new ArrayList<>();
-	
+
 	public User() {
 	}
 
@@ -42,7 +43,7 @@ public class User implements Serializable {
 		this.phone = phone;
 		this.password = password;
 	}
-	
+
 	public List<Order> getOrders() {
 		return orders;
 	}
