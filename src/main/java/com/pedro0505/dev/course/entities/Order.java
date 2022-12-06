@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pedro0505.dev.course.entities.enums.OrderStatus;
 
@@ -34,11 +37,12 @@ public class Order implements Serializable {
 
 	private Integer orderStatus;
 
-	@ManyToOne
 	@JoinColumn(name = "client_id")
+	@ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
 	private User client;
 	
-	@OneToMany(mappedBy = "id.order")
+	@OneToMany(mappedBy = "id.order", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<OrderItem> items = new HashSet<>();
 	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
