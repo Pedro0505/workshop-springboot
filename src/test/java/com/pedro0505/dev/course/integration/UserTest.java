@@ -51,6 +51,6 @@ class UserTest {
 		.andExpect(status().is(HttpStatus.OK.value()))
 		.andExpect(jsonPath("$[0].name").value("Maria Brown"))
 		.andExpect(jsonPath("$[1].name").value("Alex Green"))
-		.andExpect(jsonPath("$.length()").value(3));
+		.andExpect(jsonPath("$.length()").value(2));
 	}
 }
