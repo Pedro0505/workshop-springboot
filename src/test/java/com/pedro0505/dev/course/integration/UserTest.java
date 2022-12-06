@@ -90,4 +90,13 @@ class UserTest {
 				.andExpect(jsonPath("$.phone").value("01929312112"))
 				.andExpect(jsonPath("$.password").value("123456"));
 	}
+	
+	@Test
+	@Order(5)
+	public void testFindUserByIdWhenUserIsNotFound() throws Exception {
+		this.mockMvc.perform(get(this.baseUrl.concat("/14")).contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+		.andExpect(jsonPath("$.message").value("Resource not found. Id: 14"))
+		.andExpect(jsonPath("$.error").value("Resource not found"));
+	}
 }
