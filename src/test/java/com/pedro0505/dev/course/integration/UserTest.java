@@ -106,9 +106,19 @@ class UserTest {
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void testDeleteUserWhenUserIsNotFound() throws Exception {
-		this.mockMvc.perform(delete(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
+		this.mockMvc.perform(delete(this.baseUrl.concat("/14")).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+				.andExpect(jsonPath("$.message").value("Resource not found. Id: 14"))
+				.andExpect(jsonPath("$.error").value("Resource not found"));
+	}
+	
+	@Test
+	@Order(8)
+	public void testUpdateUserWhenUserIsNotFound() throws Exception {
+		User user = new User(null, "John Doe", "johndoe@gmail.com", "01929312112", null);
+		this.mockMvc.perform(put(this.baseUrl.concat("/14")).contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(user)))
 				.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
 				.andExpect(jsonPath("$.message").value("Resource not found. Id: 14"))
 				.andExpect(jsonPath("$.error").value("Resource not found"));
