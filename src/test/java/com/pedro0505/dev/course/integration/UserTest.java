@@ -21,36 +21,46 @@ import com.pedro0505.dev.course.entities.User;
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserTest {
-    @LocalServerPort
-    private int port;
+	@LocalServerPort
+	private int port;
 
-    private String baseUrl = "http://localhost";
+	private String baseUrl = "http://localhost";
 
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @BeforeEach
-    public void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat("/users");
-    }
+	@Autowired
+	private MockMvc mockMvc;
+
+	@BeforeEach
+	public void setUp() {
+		baseUrl = baseUrl.concat(":").concat(port + "").concat("/users");
+	}
 
 	@Test
 	public void testPostUser() throws Exception {
 		User user = new User(1L, "Pedro", "pedro@gmail.com", "8198763242", "password");
-		this.mockMvc.perform(post(this.baseUrl).contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(user)))
-		.andExpect(status().is(HttpStatus.CREATED.value()))
-		.andExpect(jsonPath("$.name").value("Pedro"))
-		.andExpect(jsonPath("$.email").value("pedro@gmail.com"))
-		.andExpect(jsonPath("$.phone").value("8198763242"))
-		.andExpect(jsonPath("$.password").value("password"));
+		this.mockMvc
+				.perform(post(this.baseUrl).contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(user)))
+				.andExpect(status().is(HttpStatus.CREATED.value()))
+				.andExpect(jsonPath("$.name").value("Pedro"))
+				.andExpect(jsonPath("$.email").value("pedro@gmail.com"))
+				.andExpect(jsonPath("$.phone").value("8198763242"))
+				.andExpect(jsonPath("$.password").value("password"));
 	}
-	
+
 	@Test
 	public void testGeAlltUser() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl).contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().is(HttpStatus.OK.value()))
-		.andExpect(jsonPath("$[0].name").value("Maria Brown"))
-		.andExpect(jsonPath("$[1].name").value("Alex Green"))
-		.andExpect(jsonPath("$.length()").value(2));
+				.andExpect(status().is(HttpStatus.OK.value()))
+				.andExpect(jsonPath("$[0].name").value("Maria Brown"))
+				.andExpect(jsonPath("$[1].name").value("Alex Green"))
+				.andExpect(jsonPath("$.length()").value(2));
+	}
+
+	@Test
+	public void testGetUserById() throws Exception {
+		this.mockMvc.perform(get(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(HttpStatus.OK.value())).andExpect(jsonPath("$.name").value("Maria Brown"))
+				.andExpect(jsonPath("$.email").value("maria@gmail.com"))
+				.andExpect(jsonPath("$.phone").value("988888888"))
+				.andExpect(jsonPath("$.password").value("123456"));
 	}
 }
