@@ -36,4 +36,11 @@ class CategoryTest {
 				.andExpect(jsonPath("$[0].name").value("Electronics"))
 				.andExpect(jsonPath("$[1].name").value("Books"));
 	}
+
+	@Test
+	public void testGetCategoriyById() throws Exception {
+		this.mockMvc.perform(get(this.baseUrl.concat("/1")).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(HttpStatus.OK.value()))
+				.andExpect(jsonPath("$.name").value("Electronics"));
+	}
 }
