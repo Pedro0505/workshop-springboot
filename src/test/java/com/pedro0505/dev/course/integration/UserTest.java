@@ -54,7 +54,7 @@ class UserTest {
 
 	@Test
 	@Order(2)
-	public void testGeAlltUser() throws Exception {
+	public void testGeAlltUsers() throws Exception {
 		this.mockMvc.perform(get(this.baseUrl).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(HttpStatus.OK.value()))
 				.andExpect(jsonPath("$[0].name").value("Maria Brown"))
